@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
-  Button,
   FlatList,
   SafeAreaView,
   StyleSheet,
@@ -73,15 +72,15 @@ export default function App() {
       limparFormulario();
       buscarTarefas();
     } catch (erro) {
-      Alert.alert('Erro', 'Nao foi possivel salvar a tarefa.');
+      Alert.alert('Erro', 'Não foi possivel salvar a tarefa.');
     }
   }
 
   function editarTarefa(tarefa) {
     setIdEditando(tarefa._id);
-    setTitulo(tarefa.title);
-    setStatus(tarefa.status);
-    setCategoria(tarefa.category);
+    setTitulo(tarefa.title || '');
+    setStatus(tarefa.status || '');
+    setCategoria(tarefa.category || '');
   }
 
   async function excluirTarefa(id) {
@@ -92,7 +91,7 @@ export default function App() {
 
       buscarTarefas();
     } catch (erro) {
-      Alert.alert('Erro', 'Nao foi possivel excluir a tarefa.');
+      Alert.alert('Erro', 'Não foi possivel excluir a tarefa.');
     }
   }
 
@@ -105,55 +104,91 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.titulo}>Gerenciador de Tarefas</Text>
-
-      <View style={styles.formulario}>
-        <TextInput
-          style={styles.input}
-          placeholder="Titulo"
-          value={titulo}
-          onChangeText={setTitulo}
-        />
-
-        <TextInput
-          style={styles.input}
-          placeholder="Status"
-          value={status}
-          onChangeText={setStatus}
-        />
-
-        <TextInput
-          style={styles.input}
-          placeholder="Categoria"
-          value={categoria}
-          onChangeText={setCategoria}
-        />
-
-        <Button
-          title={idEditando ? 'Atualizar tarefa' : 'Cadastrar tarefa'}
-          onPress={salvarTarefa}
-        />
-
-        {idEditando && (
-          <View style={styles.botaoCancelar}>
-            <Button title="Cancelar edicao" color="#777" onPress={limparFormulario} />
-          </View>
-        )}
-      </View>
-
-      <Text style={styles.subtitulo}>Tarefas cadastradas:</Text>
-
       {carregando ? (
-        <ActivityIndicator size="large" />
+        <View style={styles.carregando}>
+          <ActivityIndicator size="large" color="#2563eb" />
+          <Text style={styles.textoCarregando}>Carregando tarefas...</Text>
+        </View>
       ) : (
         <FlatList
           data={tarefas}
           keyExtractor={(item) => item._id}
+          contentContainerStyle={styles.lista}
+          ListHeaderComponent={
+            <View>
+              <View style={styles.cabecalho}>
+                <Text style={styles.titulo}>Gerenciador de Tarefas</Text>
+                <Text style={styles.descricao}>
+                  Cadastre, edite e acompanhe suas tarefas.
+                </Text>
+              </View>
+
+              <View style={styles.formulario}>
+                <Text style={styles.tituloFormulario}>
+                  {idEditando ? 'Editar tarefa' : 'Nova tarefa'}
+                </Text>
+
+                <TextInput
+                  style={styles.input}
+                  placeholder="Titulo"
+                  placeholderTextColor="#8a94a6"
+                  value={titulo}
+                  onChangeText={setTitulo}
+                />
+
+                <TextInput
+                  style={styles.input}
+                  placeholder="Status"
+                  placeholderTextColor="#8a94a6"
+                  value={status}
+                  onChangeText={setStatus}
+                />
+
+                <TextInput
+                  style={styles.input}
+                  placeholder="Categoria"
+                  placeholderTextColor="#8a94a6"
+                  value={categoria}
+                  onChangeText={setCategoria}
+                />
+
+                <TouchableOpacity style={styles.botaoSalvar} onPress={salvarTarefa}>
+                  <Text style={styles.textoBotaoPrincipal}>
+                    {idEditando ? 'Atualizar tarefa' : 'Cadastrar tarefa'}
+                  </Text>
+                </TouchableOpacity>
+
+                {idEditando && (
+                  <TouchableOpacity style={styles.botaoCancelar} onPress={limparFormulario}>
+                    <Text style={styles.textoCancelar}>Cancelar edição</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+
+              <View style={styles.linhaTituloLista}>
+                <Text style={styles.subtitulo}>Tarefas cadastradas</Text>
+                <Text style={styles.contador}>{tarefas.length}</Text>
+              </View>
+            </View>
+          }
+          ListEmptyComponent={
+            <View style={styles.vazio}>
+              <Text style={styles.tituloVazio}>Nenhuma tarefa cadastrada</Text>
+              <Text style={styles.textoVazio}>
+                Preencha os campos acima para criar a primeira tarefa.
+              </Text>
+            </View>
+          }
           renderItem={({ item }) => (
             <View style={styles.card}>
-              <Text style={styles.texto}>Titulo: {item.title}</Text>
-              <Text>Status: {item.status}</Text>
-              <Text>Categoria: {item.category}</Text>
+              <View style={styles.topoCard}>
+                <Text style={styles.nomeTarefa}>{item.title || 'Sem titulo'}</Text>
+                <Text style={styles.status}>{item.status || 'Sem status'}</Text>
+              </View>
+
+              <Text style={styles.categoria}>
+                Categoria: {item.category || 'Sem categoria'}
+              </Text>
 
               <View style={styles.botoes}>
                 <TouchableOpacity
@@ -181,59 +216,179 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#fff'
+    backgroundColor: '#eef2f7'
+  },
+  lista: {
+    padding: 18,
+    paddingBottom: 30
+  },
+  cabecalho: {
+    marginTop: 14,
+    marginBottom: 18
   },
   titulo: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    marginTop: 20
+    color: '#172033',
+    fontSize: 28,
+    fontWeight: 'bold'
+  },
+  descricao: {
+    color: '#64748b',
+    fontSize: 15,
+    marginTop: 6
   },
   formulario: {
-    marginBottom: 20
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 22,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3
+  },
+  tituloFormulario: {
+    color: '#172033',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 12
   },
   input: {
     borderWidth: 1,
-    borderColor: '#999',
-    borderRadius: 6,
-    padding: 10,
-    marginBottom: 10
+    borderColor: '#d8dee9',
+    borderRadius: 8,
+    color: '#172033',
+    backgroundColor: '#f8fafc',
+    padding: 12,
+    marginBottom: 10,
+    fontSize: 15
+  },
+  botaoSalvar: {
+    backgroundColor: '#2563eb',
+    borderRadius: 8,
+    padding: 13,
+    alignItems: 'center',
+    marginTop: 4
+  },
+  textoBotaoPrincipal: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 15
   },
   botaoCancelar: {
+    borderWidth: 1,
+    borderColor: '#cbd5e1',
+    borderRadius: 8,
+    padding: 12,
+    alignItems: 'center',
     marginTop: 10
   },
-  subtitulo: {
-    fontSize: 18,
-    fontWeight: 'bold',
+  textoCancelar: {
+    color: '#475569',
+    fontWeight: 'bold'
+  },
+  linhaTituloLista: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginBottom: 10
+  },
+  subtitulo: {
+    color: '#172033',
+    fontSize: 18,
+    fontWeight: 'bold'
+  },
+  contador: {
+    backgroundColor: '#dbeafe',
+    borderRadius: 20,
+    color: '#1d4ed8',
+    fontWeight: 'bold',
+    minWidth: 34,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    textAlign: 'center'
   },
   card: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 6,
-    padding: 12,
-    marginBottom: 10
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 12,
+    borderLeftWidth: 4,
+    borderLeftColor: '#2563eb'
   },
-  texto: {
-    fontWeight: 'bold'
+  topoCard: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 8
+  },
+  nomeTarefa: {
+    color: '#172033',
+    flex: 1,
+    fontSize: 17,
+    fontWeight: 'bold',
+    marginRight: 10
+  },
+  status: {
+    backgroundColor: '#ecfdf5',
+    borderRadius: 12,
+    color: '#047857',
+    fontSize: 12,
+    fontWeight: 'bold',
+    paddingHorizontal: 8,
+    paddingVertical: 4
+  },
+  categoria: {
+    color: '#64748b',
+    fontSize: 14
   },
   botoes: {
     flexDirection: 'row',
-    marginTop: 10
+    marginTop: 14
   },
   botaoEditar: {
-    backgroundColor: '#1976d2',
-    padding: 8,
-    borderRadius: 4,
-    marginRight: 10
+    backgroundColor: '#172033',
+    borderRadius: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 9,
+    marginRight: 8
   },
   botaoExcluir: {
-    backgroundColor: '#d32f2f',
-    padding: 8,
-    borderRadius: 4
+    backgroundColor: '#dc2626',
+    borderRadius: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 9
   },
   textoBotao: {
-    color: '#fff'
+    color: '#fff',
+    fontWeight: 'bold'
+  },
+  carregando: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center'
+  },
+  textoCarregando: {
+    color: '#64748b',
+    marginTop: 10
+  },
+  vazio: {
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
+    padding: 18,
+    alignItems: 'center'
+  },
+  tituloVazio: {
+    color: '#172033',
+    fontSize: 16,
+    fontWeight: 'bold'
+  },
+  textoVazio: {
+    color: '#64748b',
+    marginTop: 6,
+    textAlign: 'center'
   }
 });
