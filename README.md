@@ -1,70 +1,57 @@
-# CRUD Mobile com React Native, Expo e Backend Próprio 
+# CRUD Mobile com React Native, Expo e Backend Proprio
 
-Este repositório foi desenvolvido como atividade individual da disciplina de mobile na faculdade SENAC-PE, com o objetivo de criar um aplicativo mobile simples utilizando React Native com Expo, integrado a um backend próprio para realização de um CRUD simples.
+Este repositório contém um aplicativo mobile simples desenvolvido com **React Native** e **Expo**, integrado a um backend próprio para realizar um CRUD de tarefas.
+
+O projeto foi desenvolvido como atividade individual da disciplina de mobile da faculdade SENAC-PE.
 
 ## Tema do projeto
 
-O tema escolhido para o CRUD foi o **cadastro de tarefas**.
+O tema escolhido foi um **gerenciador de tarefas**.
 
 O aplicativo permite:
 
-* cadastrar tarefas;
-* listar tarefas cadastradas;
-* editar informações de uma tarefa;
-* excluir tarefas.
+- cadastrar tarefas;
+- listar tarefas cadastradas;
+- editar informações de uma tarefa;
+- excluir tarefas.
 
 ## Tecnologias utilizadas
 
-### Mobile
+- React Native
+- Expo
+- JavaScript
+- API REST própria com Node.js e Express
 
-* React Native
-* Expo
-* JavaScript
+## Backend utilizado
 
-### Backend
+O aplicativo consome a API publicada no Render:
 
-* Node.js
-* Express
-* JavaScript
+```txt
+https://gerenciador-de-tarefas-1-w2dz.onrender.com
+```
 
-## Organização do backend
+Rotas principais utilizadas pelo aplicativo:
 
-O backend foi organizado com separação mínima de responsabilidades:
+- `GET /tasks` - lista todas as tarefas;
+- `POST /tasks` - cadastra uma nova tarefa;
+- `PUT /tasks/:id` - edita uma tarefa existente;
+- `DELETE /tasks/:id` - exclui uma tarefa.
 
-* `routes`: definição das rotas da API;
-* `controllers`: regras responsáveis por processar as requisições;
-* `models`: estrutura dos dados utilizados no CRUD.
+## Observação sobre a versão do Expo
 
-## Rotas principais da API
+Este projeto foi configurado com:
 
-* `GET /tasks` — lista todas as tarefas;
-* `POST /tasks` — cadastra uma nova tarefa;
-* `PUT /tasks/:id` — edita uma tarefa existente;
-* `DELETE /tasks/:id` — exclui uma tarefa.
+```txt
+Expo 54.0.2
+React 19.1.0
+React Native 0.81.5
+```
+
+Essa versão foi utilizada para manter compatibilidade com a versão do **Expo Go** disponível no celular usado para testes.
+
+Caso o Expo sugira atualizar para uma versão mais recente, não é necessário atualizar para executar este projeto.
 
 ## Como executar o projeto
-
-### Backend
-
-Acesse a pasta do backend:
-
-```bash
-cd backend
-```
-
-Instale as dependências:
-
-```bash
-npm install
-```
-
-Execute o servidor:
-
-```bash
-npm start
-```
-
-### Mobile
 
 Acesse a pasta do aplicativo:
 
@@ -81,9 +68,22 @@ npm install
 Execute o projeto com Expo:
 
 ```bash
-npx expo start
+npx expo start --clear
 ```
+
+Depois, abra o aplicativo **Expo Go** no celular e escaneie o QR Code exibido no terminal ou no navegador.
+
+## Estrutura principal
+
+```txt
+mobile/
+  App.js
+  app.json
+  package.json
+```
+
+O arquivo `App.js` contém a tela principal do aplicativo, com o formulário de cadastro/edição e a listagem das tarefas.
 
 ## Objetivo da atividade
 
-O objetivo principal foi desenvolver uma aplicação mobile funcional, capaz de consumir dados de uma API própria, aplicando os conceitos de CRUD e organização básica de backend.
+O objetivo principal foi desenvolver uma aplicação mobile funcional, capaz de consumir dados de uma API própria, aplicando os conceitos de CRUD em um aplicativo simples com React Native e Expo.
