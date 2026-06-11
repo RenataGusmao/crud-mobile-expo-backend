@@ -1,4 +1,4 @@
-# CRUD Mobile com React Native, Expo e Backend Proprio
+# CRUD Mobile com React Native, Expo e Backend Próprio
 
 Este repositório contém um aplicativo mobile simples desenvolvido com **React Native** e **Expo**, integrado a um backend próprio para realizar um CRUD de tarefas.
 
